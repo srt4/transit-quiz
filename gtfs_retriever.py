@@ -1,7 +1,8 @@
 import requests
 import click
 
-api_key = '4bd02eb9-d9c4-47f8-a4e5-fdc23ee0f342'
+# Go to http://transitfeeds.com/api/keys to get an API key
+api_key = 'REPLACE_ME'
 
 @click.command()
 def list_agencies():
