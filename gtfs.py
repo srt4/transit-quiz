@@ -1,5 +1,3 @@
-__author__ = 'Spencer Thomas'
-
 import csv
 import re
 

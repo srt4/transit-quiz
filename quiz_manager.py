@@ -3,15 +3,12 @@ from random import shuffle
 import uuid
 from dict_utils import LRUCache
 
-__author__ = 'Spencer Thomas'
-
-
 class DifficultyLevel():
+
     EASY = .25  # 75th %ile of routes by frequency
     MEDIUM = .5  # 50th %ile of routes by frequency
     DIFFICULT = .75  # 25th %ile of routes by frequency
     EXTREMELY_DIFFICULT = 1.0 # all routes
-
 
 class Question():
 

@@ -16,7 +16,6 @@ def begin_quiz():
     quiz_manager = quiz_manager_repository.get_quiz_manager(session['quiz_manager_id'])
     return render_template('main.html', quiz_manager=quiz_manager)
 
-
 if __name__ == '__main__':
     agency = gtfs.TransitAgency(os.getcwd() + "/gtfs/capmetro")
     quiz_manager_repository = QuizManagerRepository(agency)

@@ -1,6 +1,3 @@
-__author__ = 'spencert'
-
-
 class StringSimilarityComparator:
 
     def get_string_similarity(self, first, second):
