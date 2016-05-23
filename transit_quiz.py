@@ -2,6 +2,7 @@ from flask import Flask, session, render_template
 import gtfs
 import json
 from quiz_manager import DifficultyLevel, QuizManagerRepository
+import os
 
 app = Flask(__name__)
 app.secret_key = 'A0zR98j/3yX R~XHH!jmN]LWX/,?RT'
@@ -17,6 +18,6 @@ def begin_quiz():
 
 
 if __name__ == '__main__':
-    agency = gtfs.TransitAgency("/Users/spencert/Projects/transit-quiz/gtfs/capmetro")
+    agency = gtfs.TransitAgency(os.getcwd() + "/gtfs/capmetro")
     quiz_manager_repository = QuizManagerRepository(agency)
     app.run(debug=True)
