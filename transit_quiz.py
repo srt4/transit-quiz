@@ -7,6 +7,7 @@ import os
 app = Flask(__name__)
 app.secret_key = 'A0zR98j/3yX R~XHH!jmN]LWX/,?RT'
 
+transit_agency = "TODO"
 quiz_manager_repository = None
 
 @app.route('/')
@@ -17,6 +18,6 @@ def begin_quiz():
     return render_template('main.html', quiz_manager=quiz_manager)
 
 if __name__ == '__main__':
-    agency = gtfs.TransitAgency(os.getcwd() + "/gtfs/capmetro")
+    agency = gtfs.TransitAgency(os.getcwd() + "/gtfs/" + transit_agency)
     quiz_manager_repository = QuizManagerRepository(agency)
     app.run(debug=True)
