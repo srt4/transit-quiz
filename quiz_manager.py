@@ -10,6 +10,7 @@ class DifficultyLevel():
     EASY = .25  # 75th %ile of routes by frequency
     MEDIUM = .5  # 50th %ile of routes by frequency
     DIFFICULT = .75  # 25th %ile of routes by frequency
+    EXTREMELY_DIFFICULT = 1.0 # all routes
 
 
 class Question():
@@ -28,7 +29,11 @@ class Question():
         return route_id == self.__answer_route.route_id
 
     def get_routes(self):
+        shuffle(self.__all_routes)
         return self.__all_routes
+
+    def get_answer_route(self):
+        return self.__answer_route
 
     def get_question_id(self):
         return self.__question_id
@@ -47,12 +52,17 @@ class QuizManager():
         :type transit_agency: TransitAgency
         """
         self.__transit_agency = transit_agency
-        self.__routes_used_as_answers = []
+        self.__routes_previously_used_for_answers = []
         self.__questions = []
         self.__instance_guid = uuid.uuid4()
         self.__difficulty = difficulty
         self.__number_questions = number_questions
         self.__answers = {}
+
+    def question_iterator(self):
+        while self.has_next_question():
+            self.get_next_question()
+        return self.__questions
 
     def get_next_question(self):
         """
@@ -60,13 +70,16 @@ class QuizManager():
         :rtype : Question
         """
         routes = self.__get_random_routes(self.ROUTES_PER_QUESTION, self.__difficulty,
-                                          tuple(self.__routes_used_as_answers))
+                                          tuple(self.__routes_previously_used_for_answers))
         answer = routes[0]
-        shuffle(routes)
-        self.__routes_used_as_answers.append(answer)
+        self.__routes_previously_used_for_answers.append(answer)
         question = Question(answer, routes)
         self.__questions.append(question)
-        return question
+        return {
+            "question": question,
+            "question_number": len(self.__questions),
+            "total_questions": self.__number_questions
+        }
 
     def has_next_question(self):
         return len(self.__questions) < self.__number_questions
@@ -108,11 +121,14 @@ class QuizManagerRepository():
         self.__agency = agency
 
     def get_quiz_manager(self, quiz_manager_id):
+        """
+        :rtype: QuizManager
+        """
         # Here we can choose to quietly handle exceptions, or
         # let the user know that their session expired or the
         # service was restarted. Currently opting for the former.
         if not self.__quiz_managers.contains_key(quiz_manager_id):
-            self.__quiz_managers.set(quiz_manager_id, QuizManager(self.__agency))
+            self.__quiz_managers.set(quiz_manager_id, QuizManager(self.__agency, DifficultyLevel.EASY, 10))
 
         return self.__quiz_managers.get(quiz_manager_id)
 

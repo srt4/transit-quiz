@@ -1,26 +1,39 @@
 __author__ = 'Spencer Thomas'
-import csv
 
+import csv
+import re
 
 class Route():
+
+    REPLACEMENTS = (
+        ('Line', ''),
+        ('IB', ' Inbound'),
+        ('WB', ' Westbound'),
+        ('SB', ' Southbound')
+    )
 
     def __init__(self, array):
         self.headsigns = []
         self.number_trips = 0
         self.route_id = array[0]
         self.agency_id = array[1]
-        self.route_short_name = array[2]
+        self.route_short_name = array[2].replace('Line', '') # "B Line" -> "B"
         self.route_long_name = array[3]
         self.route_desc = array[4]
         self.route_type = array[5]
-        self.route_url = array[6]
-        self.route_color = array[7]
-        self.route_text_color = array[8]
+        try: # not important
+            self.route_url = array[6]
+            self.route_color = array[7]
+            self.route_text_color = array[8]
+        except:
+            pass
         self.headsigns = set()
         self.number_trips = 0
 
     def add_trip(self, trip):
-        self.headsigns.add(trip.trip_headsign)
+        for headsign in trip.trip_headsign.split(','):
+            self.headsigns.add(re.sub("[^A-z\s]", "", headsign).strip().lstrip())
+
         self.number_trips += 1
 
     def __str__(self):
@@ -37,8 +50,11 @@ class Trip():
         self.trip_headsign = array[3]
         self.trip_short_name = array[4]
         self.direction_id = array[5]
-        self.block_id = array[6]
-        self.shape_id = array[7]
+        try: # not important
+            self.block_id = array[6]
+            self.shape_id = array[7]
+        except:
+            pass
 
 
 class TransitAgency():

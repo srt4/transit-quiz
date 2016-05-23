@@ -1,9 +1,43 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title></title>
+    <title>Transit Quiz v1.0</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    <script src="{{ url_for('static', filename="js/app.js") }}"></script>
 </head>
 <body>
+<a id="stop-animation">(stop animation)</a>
+{% for question in quiz_manager.question_iterator() %}
+    <div class="question"
+          data-question-id="question-{{ question.get_question_id() }}"
+          data-correct-route-id="{{ question.get_answer_route().route_short_name }}">
+        <div class="headsign">
+            <ul class="route-number-list">
+                {% for route in question.get_routes() %}
+                <li class="route-number-list-item">
+                    <span class="route-number" data-route-id="{{ route.route_short_name }}"
+                      style="color: #{{ route.route_color if route.route_color else none }}"
+                    >
+                        {{ route.route_short_name }}
+                    </span>
+                </li>
+                {% endfor %}
+            </ul>
+            <span class="destinations">
+                {% for headsign in question.get_answer_route().headsigns %}
+                {% set parent_index = loop.index %}
+                <span class="destination" {% if loop.index != 1 or parent_index != 1 %}style="display:none"{% endif %}>
+                    {{ headsign }}
+                </span>
+                {% endfor %}
+            </span>
+        </div>
+    </div>
+    <hr />
+{% endfor %}
 
 </body>
 </html>

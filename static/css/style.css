@@ -1,0 +1,55 @@
+body {
+  background: #eee !important;
+}
+
+.headsign {
+  -webkit-user-select: none;
+  font-family: Headsign;
+  font-size: 62px;
+  background: #eee;
+  color: #000;
+  width: 95%;
+  height: 125px;
+  left: auto;
+  right: auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 0px;
+  padding-left: 25px;
+  padding-top: 4px;
+}
+
+hr {
+  left: 0px
+  right: 0px;
+  border-top: #ccc solid 1px !important;
+}
+
+.route-number {
+    width: 100px;
+    display: inline-block;
+    overflow: hidden;
+}
+
+.route-number-list > li:first-of-type {
+    display: inline-block;
+    overflow: hidden;
+}
+
+.route-number-list li {
+    display: none;
+}
+
+.route-number-list {
+    display: inline-block;
+    list-style: none;
+    /* the below overrides bootstrap's default button style */
+  /*background: rgba(0,0,0,0.0);*/
+  /*border: none;*/
+  /*font-size: 62px;*/
+  /*color: orangered;*/
+  /*padding: 0;*/
+  /*margin: 0;*/
+  /*top: -5px;*/
+  /*left: 15px;*/
+}

@@ -1,29 +1,22 @@
-from flask import Flask, session
-from dict_utils import LRUCache
+from flask import Flask, session, render_template
 import gtfs
-from quiz_manager import QuizManager, DifficultyLevel
+import json
+from quiz_manager import DifficultyLevel, QuizManagerRepository
 
 app = Flask(__name__)
 app.secret_key = 'A0zR98j/3yX R~XHH!jmN]LWX/,?RT'
 
-quiz_managers = LRUCache(1024)
+quiz_manager_repository = None
 
 @app.route('/')
-def hello_world():
-    while 'quiz_manager_id' in session:
-        try:
-            quiz_manager = quiz_managers.get(session['quiz_manager_id'])
-            break
-        except:
-            session.pop('quiz_manager_id')
-    else:
-        quiz_manager = QuizManager(agency)
-        quiz_managers.set(quiz_manager.get_instance_id(), quiz_manager)
-        session['quiz_manager_id'] = quiz_manager.get_instance_id()
+def begin_quiz():
+    if 'quiz_manager_id' not in session:
+        session['quiz_manager_id'] = quiz_manager_repository.initialize_quiz_manager(DifficultyLevel.EXTREMELY_DIFFICULT, 10)
+    quiz_manager = quiz_manager_repository.get_quiz_manager(session['quiz_manager_id'])
+    return render_template('main.html', quiz_manager=quiz_manager)
 
-    return 'Hello World! Your quiz manager is ' + str(quiz_manager.get_instance_id())
 
 if __name__ == '__main__':
-    agency = gtfs.TransitAgency("/Users/spencert/Projects/transit-quiz/gtfs/kcmetro")
+    agency = gtfs.TransitAgency("/Users/spencert/Projects/transit-quiz/gtfs/capmetro")
+    quiz_manager_repository = QuizManagerRepository(agency)
     app.run(debug=True)
-
